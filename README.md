@@ -6,6 +6,11 @@ sentiment index, the fusion baseline, and a volatility-targeting overlay.
 Station 4 (the Streamlit app) is built and polished (see the prompt_04,
 prompt_05 and prompt_06 sections below).
 
+## Live App
+
+- GitHub repository: https://github.com/rayt737/z5710071_projectB
+- Live Streamlit app: https://z5710071projectb.streamlit.app/
+
 ## How to run
 
     python -m pip install -r requirements.txt -r requirements-dev.txt   # dev adds nltk (VADER)

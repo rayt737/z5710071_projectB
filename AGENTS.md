@@ -17,6 +17,11 @@ Data comes from `src/data_access.py` (provided/frozen; Google-Drive zip, cached
 after one hit; `FINS_DATA_ZIP` env var can point to a local zip). Never commit
 raw data. All generated outputs go under `results/` and ARE committed.
 
+## Live App
+
+- GitHub repository: https://github.com/rayt737/z5710071_projectB
+- Live Streamlit app: https://z5710071projectb.streamlit.app/
+
 ## Non-negotiable coding rules (from ai/prompts/prompt_01.md)
 
 - **No look-ahead, anywhere.** Weights on day *t* from data strictly before *t*;
