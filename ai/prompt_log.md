@@ -1076,3 +1076,63 @@ now expects exactly one `img` (the title-row logo) instead of zero.
 - `tests/test_app.py` (plotly count 7 -> 6; imgs 0 -> 1 for the title logo)
 - Docs: `README.md`, `AGENTS.md`, `CLAUDE.md` (removed "app loads the lexicon
   summary" wording; Sentiment-tab and results-table descriptions updated)
+
+## Entry 13: Prompt 07 - git repo, hand-in check, and private GitHub push
+
+### What changed and why
+Prompt 07 turned the project folder into a real submission repo: its own git
+repo (isolated from the enclosing `fins-agent` course repo), a clean hand-in
+check, and a private GitHub remote. All code plus the precomputed app
+artifacts under `results/` are committed; raw data and secrets are not.
+
+### `.gitignore` before / after
+- **Before:** already correct in substance - `__pycache__/`, `*.pyc`, `.venv/`,
+  `venv/`, `data/`, `*.parquet`, `*.csv`, `.streamlit/secrets.toml`, `.env`
+  ignored, with `!results/**` and `!src/lexicons/**` carve-outs. The lexicons
+  are committed on purpose (LM grounding dictionary + our finVADER-lite
+  extension; the sentiment pipeline reads them at runtime).
+- **After:** added `.pytest_cache/` and `.ruff_cache/` to the Python ignore
+  block (standard CI noise that should never be staged). No image rule exists,
+  so `assets/*.png` commits normally - the prompt's "silent PNG catch" did not
+  apply here.
+
+### `check_handin.py` fix (the one `[FAIL]`)
+Running the checker for real after committing flagged the lexicon CSVs as
+"data files should not be committed", contradicting the brief and the
+`.gitignore` carve-out:
+
+- **Before:** the data-file scan excluded only paths containing `results`.
+- **Fix:** `scripts/check_handin.py` now also exempts `src/lexicons/**` (path
+  parts `src` and `lexicons`), mirroring `.gitignore`. The LM dictionary is a
+  public reference lexicon and the extension is our own small addition - both
+  are committed artifacts the pipeline needs, not raw project data.
+- **Result:** `21 checks passed` with 2 reminders only (`__pycache__` cleanup
+  before zipping; no `report/report.pdf` yet - the report is a later step).
+
+### Repo creation
+- `git init` at the project root (default branch **`master`**; user identity
+  `Raynard Nicholas Thela <z5710071@ad.unsw.edu.au>`). `git rev-parse
+  --show-toplevel` confirms the project repo is independent of the enclosing
+  `fins-agent` course repo.
+- Initial commit `6ca31e6`: 81 files, all code + tests + docs + `results/`
+  (incl. figures) + `src/lexicons/*.csv` + `assets/*.png`. Staged review
+  confirmed no raw data, no secrets, no caches.
+- `gh` auth check: logged in as **`rayt737`** (`repo` scope, https). Remote
+  created and pushed with `gh repo create z5710071_projectB --private
+  --source=. --push`.
+- **Repo: https://github.com/rayt737/z5710071_projectB** (visibility
+  PRIVATE, default branch `master`, remote `origin` tracks `origin/master`).
+- Verified against the remote: `results/data/*.csv`, `results/figures/*.png`,
+  `results/tables/*.csv`, `src/lexicons/*.csv`, `assets/*.png`,
+  `streamlit_app.py` all present; no `data/` folder and no secrets pushed.
+
+### Result
+- `scripts/check_handin.py`: **21 checks passed**, 2 reminders, 0 `[FAIL]`.
+- Repo is private on GitHub; the student controls the visibility flip at
+  hand-in time (see `docs/STUDENT_DEPLOY.md`).
+- Working tree clean after the commit; nothing else pending for this prompt.
+
+### Files
+- `scripts/check_handin.py` (data-file scan now exempts `src/lexicons/**`)
+- `.gitignore` (added `.pytest_cache/`, `.ruff_cache/`)
+- `ai/prompt_log.md` (this entry)
