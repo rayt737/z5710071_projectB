@@ -1136,3 +1136,198 @@ Running the checker for real after committing flagged the lexicon CSVs as
 - `scripts/check_handin.py` (data-file scan now exempts `src/lexicons/**`)
 - `.gitignore` (added `.pytest_cache/`, `.ruff_cache/`)
 - `ai/prompt_log.md` (this entry)
+
+---
+
+## Entry 14: Prompt 08 - Part B report drafted (Word source + PDF, uncommitted)
+
+### What I wanted
+Author the Part B report as `report/report.docx` (editable Word source) and
+`report/report.pdf` (submission), following prompt_08 and the brief's Section 5:
+six sections, exhibits inline above the paragraph that interprets them, thesis-
+style numbered equations, ~5,000-5,250 narrative words, live numbers only,
+`[REVIEW]` tags on every interpretive claim, and the standing rule that this
+draft stays uncommitted for the student's edit pass.
+
+### Prompt(s)
+prompt_08 in full (read-first list, length/format clarifications, the six
+required sections, exhibit list, after-draft tasks).
+
+### What the assistant produced
+`scripts/build_report.py` (a python-docx generator mirroring Part A's build
+script) producing:
+
+- **5,016 narrative words** (excl. captions + references), **33 `[REVIEW]`
+  tags**, 6 sections + References, 15 inline figures + 4 tables + 5 numbered
+  equations, and a `report.pdf` exported via Word COM (19 pages incl. inline
+  exhibits; narrative text ~10 pages, within the professor's text-only limit).
+- Every prose number pulled live from `results/` CSVs at build time
+  (`performance_metrics.csv`, `fusion_comparison.csv`,
+  `vol_target_comparison.csv`, `fund_returns.csv`, `fund_fees.csv`,
+  `fund_display_names.csv`, `headline_sentiment.csv`,
+  `sector_sentiment_index.csv`).
+- Spot-checked 15 prose numbers against the source CSVs; all traced.
+- All 6 sections covered (funds/backtest design incl. zero-transaction-cost
+  assumption tied to Section 5's zero-commission model; OOS results + fact
+  sheets; sentiment index with the lexicon comparison inline; fusion + the
+  vol-target look-ahead bug honestly reported; app + investor journey; three
+  specific recommendations). The 7 required exhibits plus 8 extra figures are
+  all inline.
+
+### What was wrong or risky (caught while drafting)
+- **`sentiment_lexicon_comparison_summary.csv` has no `neutral`/`plain_vader`
+  row** (only finvader_lite). The first draft's neutral-share lookup for plain
+  VADER would have crashed; fixed to compute both neutral shares from
+  `headline_sentiment.csv` with the same `|score| < 0.05` rule the summary
+  CSV uses (verified 0.482007 matches the stored finvader_lite value exactly).
+- **Three overbroad claims would have been factually wrong** and were reworded
+  against live CSV values: (1) "best Sharpe of any equity fund" - the Growth &
+  Innovation Sectors Index Fund (1.03) beats the equity index fund (0.82), so
+  it is now "best of the four core equity funds"; (2) "highest terminal value
+  in the equity universe" - the growth cluster ends higher, reworded to
+  "highest in Figure 1"; (3) "deepest drawdown in the crypto family" - the
+  payments funds are deeper, reworded to "deepest of the four core crypto
+  method funds". Also corrected "both give back more than 80%": Web3
+  Infrastructure's drawdown is 79.3%, quoted live instead.
+- **Table 1 turnover** was displayed as a fraction (0.07) while Table 2 used
+  percent (7.1%); made both percent with "Turnover % (monthly)".
+- **Figure 11 caption** had a leftover hardcoded date hack (a `... if False else
+  '2021-01-04'` expression); replaced with live first/last dates from the
+  metrics CSV.
+- **LaTeX escapes** (`\hat{\sigma}`, `\frac`, `\sum`, `\,`) would have rendered
+  literally in Word; replaced with Unicode (Σ, σ̂, μ̂, w̃, R̃, λ, √, ×) and made
+  `P()` render `_{...}`/`^{...}` as real sub/superscripts.
+- The **-59.3%** look-ahead-bug drawdown is not in any committed CSV (the
+  corrected run overwrote it); it's from Entry 7. Kept it but flagged
+  `[REVIEW]` and pointed the reader at the log.
+
+### What I changed and why
+Wrote `scripts/build_report.py` from scratch (Part A conventions: built-in
+styles, Heading 2 numbered sections, Heading 3 subsections, Caption style at
+Pt(8) grey, "Light Grid Accent 1" centred tables, hanging-indent references).
+Folded in the honest vol-target story, the turnover-spike fusion story, the
+sentiment-applies-to-equity-only scope statement, and the zero-cost/zero-
+commission linkage. Journal-cited only the 8 approved references.
+
+### Standing rule (stated in the script docstring too)
+Once `report/report.docx` has been hand-edited in Word, any future automated
+regeneration must make SURGICAL edits only - never re-run
+`scripts/build_report.py` wholesale, or it will wipe manual edits.
+
+### Result
+- `report/report.docx` (Word source) and `report/report.pdf` (Word COM export)
+  both exist in `report/`.
+- **Nothing committed or pushed** - repo still at `6ade3de`, working tree has
+  `scripts/build_report.py` + `ai/prompts/prompt_08.md` untracked and the two
+  report files (see `git status`). Commit happens only after the student's
+  edit pass.
+
+### Files
+- `scripts/build_report.py` (new, untracked)
+- `report/report.docx`, `report/report.pdf` (new, untracked)
+- `ai/prompts/prompt_08.md` (untracked, from the student)
+- `ai/prompt_log.md` (this entry)
+
+## Entry 15: Prompt 09 - figure-quality fixes, surgical docx image swap
+
+### What I wanted
+Fix six figure-quality issues from prompt_09 on the static `results/figures/`
+and propagate them into the hand-edited `report/report.docx` WITHOUT touching
+`word/document.xml` (standing rule from Entry 14): (1) `%b %Y` date axes on
+every date figure, (2) non-overlapping legends, (3) horizontal Sharpe barplot,
+(4) spaced date ticks on the lexicon-comparison subplot, (5) visible `k_t`
+line + clip-band shading in the vol-target scaling figures, (6) caption
+line-wrapping so long captions don't stretch the PNG canvas.
+
+### What the assistant produced
+Two source patches plus a pipeline re-run and a zip-level swap:
+
+- `src/style.py`: new `format_date_axis(ax, max_ticks, rotation, labelsize)`
+  using `mdates.MonthLocator(interval=ceil(span_months/max_ticks))` +
+  `mdates.DateFormatter("%b %Y")`; `save_fig` now wraps captions with
+  `textwrap.fill(width=max(40, figwidth*12))` and insets the axes for wrapped
+  lines.
+- `src/plots.py`: `format_date_axis` added to all 12 date figures; legends
+  switched to `loc="best"`; `fig_sharpe_barplot` rebuilt as a descending
+  horizontal bar chart with wrapped display names and value labels; lexicon
+  subplot gets spaced ticks; `fig_vol_target_scaling` draws `k_t` at lw 1.8 /
+  zorder 5 with a coral `fill_between` band where `k_t` hits the 1.5 clip and
+  a conditional "Pinned at clip band" legend; `fig_sector_sentiment` pins
+  `ax.margins(x=0)` so the axis starts at Jan 2020 (no stray Dec 2019 tick).
+
+### Verification evidence (in-process, not eyeballed)
+- Date ticks on growth/drawdown/fusion/vol-target figures read e.g. `['Apr
+  2021','Dec 2021','Aug 2022','Apr 2023','Dec 2023']`; lexicon subplot has 6
+  ticks, zero tick-text overlap; sector starts at `Sep 2020` (5 clean ticks).
+- Sharpe bar: horizontal (`width 1.03 > height 0.7`), 22 wrapped y-labels,
+  sorted descending, Growth & Innovation top at Sharpe 1.031.
+- k_t is REAL data (pipeline prints `k in [0.741, 1.500]` / `[0.530, 1.500]`,
+  pinned at the 1.5 clip band by design - Entry 7 overlay), so fix 5 is
+  style-only: `lw 1.8`, `shade_collections: 1`, legend text "Pinned at clip
+  band".
+- Caption wrap confirmed: 195-char vol-target and 186-char fusion captions
+  wrap to 2 lines; PNG width of the 10-inch figures stays ~1482 px (canvas no
+  longer stretched).
+- Full pipeline re-run twice; after the final lint-cleanup edit the 15 PNGs
+  were byte-identical to the pre-edit ones (sha256).
+
+### Surgical docx swap (report.docx untouched elsewhere)
+- Backup `report/report_backup_before_figure_swap.docx` (sha256
+  `1E4A1B93...`).
+- Mapping from `scripts/build_report.py` insertion order (image2..image16),
+  cross-checked by byte-size match against the pre-fix PNGs.
+- Rewrote the docx zip replacing exactly `word/media/image2.png`..
+  `word/media/image16.png` (15 entries) with the regenerated PNG bytes; the
+  other 16 entries are byte-identical (sha256), including `word/document.xml`
+  (`a734fcf5...` - the hand-edited source) and `word/media/image1.png` (logo).
+- All 15 swapped entries hash-match the regenerated PNGs; `python-docx`
+  re-opens the swapped file: 137 paragraphs, 16 inline shapes, text intact.
+- After re-running the pipeline post-swap, every in-docx image still
+  hash-matches the freshly generated PNGs.
+- `report/report.pdf` re-exported via Word COM `SaveAs(..., 17)` (does not
+  modify the docx; docx sha256 `4EADD29C...` unchanged after the session).
+
+### Notes for the student
+- The Sharpe barplot frame in the docx was sized for the old vertical figure
+  (media 1354x586, displayed ~5.7" tall): the horizontal replacement will
+  render compressed. Drag-resize that one frame in Word to ~4.5"x5.5".
+- The other 14 frames keep their existing aspect ratios; no manual resize
+  expected.
+- Lint: `ruff check .` still reports 18 pre-existing errors in
+  `scripts/build_report.py` and the frozen `src/data_access.py`; my changed
+  files (`src/style.py`, `src/plots.py`) pass clean. 64/64 tests pass.
+
+### Files
+- `src/style.py`, `src/plots.py` (patched)
+- `results/figures/*.png` (all 15 regenerated)
+- `report/report.docx` (swapped in place), `report/report.pdf` (re-exported)
+- `report/report_backup_before_figure_swap.docx` (pre-swap original)
+- `ai/prompt_log.md` (this entry)
+
+Nothing committed or pushed; repo still at `6ade3de`.
+
+## Entry 16: Report finalised and pushed (prompt_09 wrap-up)
+
+### What happened
+- `report/report.pdf` re-exported from the current `report.docx` via Word COM
+  (read-only open; docx sha256 unchanged after export). PDF now newer than the
+  docx (docx was re-saved in Word at 2026-08-11 20:38, capturing a student
+  hand-edit that resized the portfolio-weights frame - that edit is preserved
+  and reflected in the PDF); 23 pages, `%PDF-1.7`, EOF valid.
+- Pre-export housekeeping: confirmed Word had no handle on the docx (no
+  `~$` lock file, no WINWORD process) - avoids the PermissionError trap.
+- `scripts/check_handin.py`: 22 checks passed, one `[WARN]` about deleting
+  `__pycache__` before zipping (zip-time reminder only, no `[FAIL]`). The
+  earlier "no report/report.pdf yet" warning is gone.
+- Figure-fix backup `report_backup_before_figure_swap.docx` deleted after
+  re-verification (docx + pdf intact and openable; 15 swapped media hashes
+  still match `results/figures/`; prose identical to pre-swap).
+
+### Commit / push
+- Commit `0170b9d`: "Figure quality fixes and finalized report (prompt_09)" -
+  src/style.py + src/plots.py patches, 15 regenerated figures, report.docx +
+  report.pdf, scripts/build_report.py, ai/prompts/prompt_08.md + prompt_09.md.
+- Pushed to `origin master` (github.com/rayt737/z5710071_projectB). Remote
+  verified by listing the `report/` directory contents on GitHub (both
+  `report.docx` and `report.pdf` present) - not just local git status.
+- Repo now at `0170b9d` (was `6ade3de` before this milestone).
