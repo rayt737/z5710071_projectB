@@ -1331,3 +1331,54 @@ Nothing committed or pushed; repo still at `6ade3de`.
   verified by listing the `report/` directory contents on GitHub (both
   `report.docx` and `report.pdf` present) - not just local git status.
 - Repo now at `0170b9d` (was `6ade3de` before this milestone).
+
+## Entry 17: Final submission pass (prompt_10)
+
+### What happened
+- Added a `## Live App` section near the top of `README.md` and the same two
+  links to `AGENTS.md` and `CLAUDE.md`:
+  - GitHub repository: https://github.com/rayt737/z5710071_projectB
+  - Live Streamlit app: https://z5710071projectb.streamlit.app/
+- Both URLs verified live, not assumed: GitHub API reports the repo PUBLIC
+  (`visibility: public`, `private: false`, default branch `master`); the
+  Streamlit URL returned HTTP 200 with the app shell.
+- `SUBMISSION_CHECKLIST.md` walked item by item and ticked only what was
+  actually verified:
+  1. Folder `z5710071_projectB` - confirmed.
+  2. `report/report.pdf` present, Word-authored, 23 pages total; narrative word
+     count freshly measured from the docx = 4,855-4,909 (excl. captions and
+     references; within the ~5,000 +/- 5% band).
+  3. All 7 required Section 5 exhibits are in the docx, each captioned (Caption
+     style) and interpreted - verified from a paragraph/tables dump of the
+     report itself, not the file list: Table 1 (metrics), Figures 1-3
+     (growth-of-$1 by universe), Figure 6 (drawdown), Figure 7 (weights over
+     time), Figure 8 (Sharpe barplot), Figure 10 (sector sentiment index),
+     Table 2 + Figure 11 (fusion before/after).
+  4. Combined (Multi-Asset) fund family with multiple methods, walk-forward
+     OOS with `assert_no_lookahead`, fact sheet in report section 2.
+  5. `streamlit run streamlit_app.py` actually launched locally: health
+     endpoint returned "ok", main page HTTP 200.
+  6. Repo PUBLIC via API + live URL loads (above).
+  7. No raw data or secrets committed: `git ls-files` scan found no
+     parquet/zip/xlsx/pkl/db and no api_key/token=/password/-----BEGIN
+     patterns (the 2 residual text matches were the words "password"/"secret"
+     inside `headline_sentiment.csv` and the LM lexicon); `.gitignore` blocks
+     `data/`, `*.parquet`, `*.csv` (except `results/**`, `src/lexicons/**`),
+     `.env`, `.streamlit/secrets.toml`; `src/data_access.py` loads the hosted
+     ZIP from the `FINS_DATA_ZIP` env var only.
+  8. `AGENTS.md` and `CLAUDE.md` are project-specific, not stubs.
+  9. `ai/` has `prompt_log.md`, `lexicon_extension_log.md`, `AI_NOTES.md`,
+     the template and `ai/prompts/prompt_01.md`..`prompt_10.md`.
+  10. Writing and interpretation: ticked per the student's direct
+      confirmation (not independently verified).
+  11. Submit: LEFT UNTICKED - the student's own final action (zip to Moodle +
+      repo link + live URL).
+- Caches deleted (`__pycache__`, `.pytest_cache`, `.ruff_cache`; 4 dirs) and
+  `scripts/check_handin.py` run one last time: 23 checks passed (the
+  zip-time WARN is gone), "All checks passed - ready to zip and deploy."
+
+### Commit / push
+- Commit `5d6b5f5`: "Final submission pass: live app links, verified checklist
+  (prompt_10)" - README.md, AGENTS.md, CLAUDE.md, SUBMISSION_CHECKLIST.md,
+  ai/prompts/prompt_10.md (this log entry was committed on top of it).
+- Pushed to `origin master`; remote verified via `git ls-remote` + GitHub API.
