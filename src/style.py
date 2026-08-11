@@ -14,9 +14,12 @@ Usage:
 """
 from __future__ import annotations
 
+import math
 import pathlib
+import textwrap
 
 import matplotlib as mpl
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
@@ -74,6 +77,28 @@ def new_fig(figsize: tuple[float, float] = (10, 6)) -> tuple[plt.Figure, plt.Axe
     return fig, ax
 
 
+def format_date_axis(
+    ax: plt.Axes,
+    max_ticks: int = 8,
+    rotation: float = 0,
+    labelsize: float | None = None,
+) -> None:
+    """Clean 'Jan 2021'-style date axis with bounded tick density.
+
+    The month interval is derived from the axis span (matplotlib date units are
+    float days), so a 3-year window and a 4-year window both land on month
+    boundaries without cramming ticks (prompt_09 item 1).
+    """
+    xmin, xmax = ax.get_xlim()
+    span_months = max(round((xmax - xmin) / 30.44), 1)
+    interval = max(1, math.ceil(span_months / max_ticks))
+    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=interval))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+    ax.tick_params(axis="x", rotation=rotation)
+    if labelsize is not None:
+        ax.tick_params(axis="x", labelsize=labelsize)
+
+
 def save_fig(
     fig: plt.Figure,
     filename: str,
@@ -84,16 +109,23 @@ def save_fig(
     """Save figure with tight layout and optional caption below.
 
     The caption is placed below the axes using fig.text so it renders
-    inside the saved image (short, one-line, data source note).
+    inside the saved image. Long single-line captions are wrapped to roughly
+    the figure width so ``bbox_inches="tight"`` never stretches the saved
+    canvas out to the caption's full single-line length (prompt_09 item 6).
     """
     outdir = pathlib.Path(results_dir)
     outdir.mkdir(parents=True, exist_ok=True)
+    caption_lines = 1
     if caption:
+        width = max(40, int(fig.get_figwidth() * 12))
+        caption = "\n".join(
+            textwrap.fill(line, width=width) for line in caption.splitlines())
+        caption_lines = caption.count("\n") + 1
         fig.text(
             0.05, 0.01, caption, fontsize=FONT_CAPTION, color=GREY,
             ha="left", va="bottom",
         )
-    fig.tight_layout(rect=[0, 0.03, 1, 1])
+    fig.tight_layout(rect=[0, 0.03 + 0.03 * (caption_lines - 1), 1, 1])
     path = outdir / filename
     fig.savefig(path, dpi=dpi, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)

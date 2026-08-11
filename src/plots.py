@@ -114,11 +114,12 @@ def fig_growth_of_1(
     ax.set_ylabel("Growth of $1 invested")
     ax.set_title(f"{brand.family_display_prefix(family)} funds — growth of $1, all methods",
                  fontsize=13, color=sty.NAVY)
-    ax.legend(title="Method", loc="upper left", fontsize=sty.FONT_LEGEND)
+    ax.legend(title="Method", loc="best", fontsize=sty.FONT_LEGEND)
     if series:
         x_end = series[0][1].index[-1]
         sty.label_end_values(ax, [(lbl, float(growth.iloc[-1]), color)
                                   for lbl, growth, color in series], x_end)
+    sty.format_date_axis(ax, max_ticks=6)
     period = _period(pd.Series(fund_returns_long["date"].unique()).sort_values())
     sty.save_fig(fig, filename, caption=_caption(
         f"results/data/fund_returns.csv ({FAMILY_LABELS[family].lower()} family)", period,
@@ -144,6 +145,7 @@ def fig_drawdown(returns: pd.Series, fund_label: str, filename: str, fund_id: st
     ax.set_ylabel("Drawdown (%)")
     ax.set_title(f"{fund_label} — drawdown from peak", fontsize=13, color=sty.NAVY)
     ax.yaxis.set_major_formatter(sty.pct_formatter())
+    sty.format_date_axis(ax, max_ticks=6)
     sty.save_fig(fig, filename, caption=_caption(
         f"results/data/fund_returns.csv ({fund_id or fund_label})", _period(returns.index),
         "Drawdown is the cumulative fall from the running peak; returns are simple daily returns."))
@@ -188,7 +190,7 @@ def fig_weights_stacked(
                color=colors[i], width=1.0)
         bottom += stacked[col].values
 
-    tick_every = max(1, len(stacked) // 8)
+    tick_every = max(1, len(stacked) // 6)
     ax.set_xticks(x[::tick_every])
     labels = [stacked.index[i].strftime("%b %Y") for i in range(0, len(stacked), tick_every)]
     ax.set_xticklabels(labels, rotation=30, ha="right", fontsize=8)
@@ -196,7 +198,7 @@ def fig_weights_stacked(
     ax.set_ylabel("Target weight")
     ax.set_title(f"{fund_label} - target weights by sector at each monthly rebalance",
                  fontsize=13, color=sty.NAVY)
-    ax.legend(title="Sector", loc="upper left", fontsize=8, ncol=2, frameon=True)
+    ax.legend(title="Sector", loc="best", fontsize=8, ncol=2, frameon=True)
     ax.set_ylim(0, 1.0)
     period = f"{stacked.index[0].strftime('%b %Y')} - {stacked.index[-1].strftime('%b %Y')}"
     sty.save_fig(fig, filename, caption=_caption(
@@ -209,10 +211,18 @@ def fig_weights_stacked(
 # ---------------------------------------------------------------------------
 
 def fig_sharpe_barplot(metrics: pd.DataFrame, filename: str = "sharpe_barplot.png"):
-    """Sharpe ratio barplot across all 22 funds."""
+    """Sharpe ratio barplot across all 22 funds (horizontal, sorted descending).
+
+    Mirrors the Station 4 app's Compare-tab chart (prompt_06 item 3): long
+    display names run down the y-axis so they never rotate or collide, funds
+    are ordered by Sharpe descending, and the canvas height is sized by the
+    number of funds so the wrapped labels keep clear vertical spacing
+    (prompt_09 item 3).
+    """
     df = metrics.copy()
+    df = df.sort_values("sharpe_ratio", ascending=False).reset_index(drop=True)
     df["label"] = df["fund"].map(
-        lambda f: brand.wrap_display_name(brand.fund_display_name(f), 22))
+        lambda f: brand.wrap_display_name(brand.fund_display_name(f), 26))
     family_color = {
         "equity": sty.NAVY, "crypto": sty.CORAL, "combined": sty.AMBER,
         "defensive": "#2a9d8f", "cyclical": "#264653",
@@ -220,20 +230,25 @@ def fig_sharpe_barplot(metrics: pd.DataFrame, filename: str = "sharpe_barplot.pn
     }
     colors = [family_color[parse_fund_id(f)[0]] for f in df["fund"]]
 
-    fig, ax = sty.new_fig(figsize=(14, 6))
-    bars = ax.bar(np.arange(len(df)), df["sharpe_ratio"].values, color=colors, width=0.7)
-    ax.axhline(0, color=sty.GREY, linewidth=1)
-    ax.set_xticks(np.arange(len(df)))
-    ax.set_xticklabels(df["label"].values, rotation=55, ha="right", fontsize=6.5)
-    ax.set_ylabel("Sharpe ratio (rf = 0)")
-    ax.set_xlabel("Fund")
-    ax.set_title("Out-of-sample Sharpe ratios across all 22 funds", fontsize=13, color=sty.NAVY)
+    n = len(df)
+    fig, ax = sty.new_fig(figsize=(11, 0.42 * n + 1.6))
+    y = np.arange(n)
+    bars = ax.barh(y, df["sharpe_ratio"].values, color=colors, height=0.7)
+    ax.axvline(0, color=sty.GREY, linewidth=1)
+    ax.set_yticks(y)
+    ax.set_yticklabels(df["label"].values, fontsize=8.5)
+    ax.invert_yaxis()
+    ax.margins(y=0.02)
+    ax.set_ylabel("")
+    ax.set_xlabel("Sharpe ratio (rf = 0)")
+    ax.set_title("Out-of-sample Sharpe ratios across all 22 funds",
+                 fontsize=13, color=sty.NAVY)
     for bar, v in zip(bars, df["sharpe_ratio"].values):
-        ax.text(bar.get_x() + bar.get_width() / 2, v + 0.01, f"{v:.2f}",
-                ha="center", va="bottom", fontsize=7.5, color=sty.GREY)
+        ax.text(bar.get_width() + 0.01, bar.get_y() + bar.get_height() / 2,
+                f"{v:.2f}", ha="left", va="center", fontsize=7.5, color=sty.GREY)
     from matplotlib.patches import Patch
     handles = [Patch(color=c, label=FAMILY_LABELS[family]) for family, c in family_color.items()]
-    ax.legend(handles=handles, title="Asset family", loc="upper right", fontsize=9)
+    ax.legend(handles=handles, title="Asset family", loc="lower right", fontsize=9)
     period = f"{df['first_live_date'].min()} to {df['last_date'].max()}"
     sty.save_fig(fig, filename, caption=_caption(
         "results/tables/performance_metrics.csv", period,
@@ -284,6 +299,7 @@ def fig_sentiment_comparison(
     ax2.set_ylabel("Mean compound score")
     ax2.set_title("Monthly mean headline sentiment", fontsize=12, color=sty.NAVY)
     ax2.legend(fontsize=9)
+    sty.format_date_axis(ax2, max_ticks=6)
     fig.suptitle("Plain VADER vs finVADER-lite (35-term LM-grounded lexicon)",
                  fontsize=13, color=sty.NAVY)
     fig.tight_layout(rect=[0, 0.05, 1, 1])
@@ -310,7 +326,9 @@ def fig_sector_sentiment(index_long: pd.DataFrame, filename: str = "sector_senti
     ax.set_ylabel("Sentiment score (finVADER-lite, lagged 1 trading day)")
     ax.set_title("Sector sentiment index over time (equal-weight stocks, "
                  "no-news days carried forward)", fontsize=12.5, color=sty.NAVY)
-    ax.legend(title="Sector", ncol=2, fontsize=8, loc="upper left")
+    ax.legend(title="Sector", ncol=2, fontsize=8, loc="best")
+    ax.margins(x=0)
+    sty.format_date_axis(ax, max_ticks=6)
     period = f"{pivot.index.min().strftime('%b %Y')} - {pivot.index.max().strftime('%b %Y')}"
     sty.save_fig(fig, filename, caption=_caption(
         "results/data/sector_sentiment_index.csv (lagged 1 trading day)", period,
@@ -344,10 +362,11 @@ def fig_fusion_growth(
     ax.set_ylabel("Growth of $1 invested")
     ax.set_title(f"Sentiment fusion on the {base_name} (before transaction costs)",
                  fontsize=12.5, color=sty.NAVY)
-    ax.legend(loc="upper left", fontsize=8.5)
+    ax.legend(loc="best", fontsize=8.5)
     x_end = base.index[-1]
     sty.label_end_values(ax, [(lbl, float(g.iloc[-1]), color)
                               for lbl, g, color in plotted], x_end)
+    sty.format_date_axis(ax, max_ticks=6)
     period = f"{base.index.min().strftime('%b %Y')} - {base.index.max().strftime('%b %Y')}"
     sty.save_fig(fig, filename, caption=_caption(
         "results/tables/fusion_comparison.csv", period,
@@ -386,11 +405,12 @@ def fig_growth_groupings(
     ax.set_xlabel("Date")
     ax.set_ylabel("Growth of $1 invested")
     ax.set_title(title, fontsize=12.5, color=sty.NAVY)
-    ax.legend(loc="upper left", fontsize=sty.FONT_LEGEND, ncol=2)
+    ax.legend(loc="best", fontsize=sty.FONT_LEGEND, ncol=2)
     if plotted:
         x_end = plotted[0][1].index[-1]
         sty.label_end_values(ax, [(lbl, float(g.iloc[-1]), color)
                                   for lbl, g, color in plotted], x_end)
+    sty.format_date_axis(ax, max_ticks=6)
     period = _period(pd.Series(fund_returns_long["date"].unique()).sort_values())
     fams = ", ".join(sorted({
         parse_fund_id(f)[0]
@@ -435,10 +455,11 @@ def fig_vol_target_growth(
     ax.set_ylabel("Growth of $1 invested")
     ax.set_title(f"Volatility targeting on the {fund_label}",
                  fontsize=12.5, color=sty.NAVY)
-    ax.legend(loc="upper left", fontsize=9)
+    ax.legend(loc="best", fontsize=9)
     x_end = base.index[-1]
     sty.label_end_values(ax, [(lbl, float(g.iloc[-1]), color)
                               for lbl, g, color in plotted], x_end)
+    sty.format_date_axis(ax, max_ticks=6)
     period = f"{base.index.min().strftime('%b %Y')} - {base.index.max().strftime('%b %Y')}"
     sty.save_fig(fig, filename, caption=_caption(
         f"results/tables/vol_target_comparison.csv ({fund_id or fund_label})", period,
@@ -452,17 +473,33 @@ def fig_vol_target_scaling(
     filename: str,
     clip: tuple = (0.5, 1.5),
 ):
-    """The vol-targeting scaling factor k_t over time."""
+    """The vol-targeting scaling factor k_t over time.
+
+    k_t is real, causal data pinned at the clip band when trailing vol falls
+    far below the target (k_t = 1.5 during calm stretches) - it is not NaN, so
+    the fix is visual: a bold, solid, topmost k_t line plus a light band over
+    the periods where the clip binds (prompt_09 item 5).
+    """
     fig, ax = sty.new_fig(figsize=(10, 4.2))
-    ax.plot(k.index, k.values, color=sty.NAVY, linewidth=1.0)
-    ax.axhline(1.0, color=sty.GREY, linewidth=1, linestyle="--")
+    lower, upper = clip
+    at_clip = k.values >= upper
+    if at_clip.any():
+        ax.fill_between(k.index, lower, upper, where=at_clip,
+                        color=sty.CORAL, alpha=0.12, linewidth=0,
+                        label="Pinned at clip band")
+    ax.plot(k.index, k.values, color=sty.NAVY, linewidth=1.8,
+            zorder=5, solid_capstyle="round")
+    ax.axhline(1.0, color=sty.GREY, linewidth=1, linestyle="--", zorder=3)
     for bound in clip:
-        ax.axhline(bound, color=sty.CORAL, linewidth=0.8, linestyle=":")
+        ax.axhline(bound, color=sty.CORAL, linewidth=0.8, linestyle=":", zorder=3)
     ax.set_xlabel("Date")
     ax.set_ylabel("Scaling factor $k_t$")
     ax.set_title(f"{fund_label} — vol-targeting scaling factor (clip {clip})",
                  fontsize=12.5, color=sty.NAVY)
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _pos: f"{v:.2f}"))
+    if at_clip.any():
+        ax.legend(loc="best", fontsize=8)
+    sty.format_date_axis(ax, max_ticks=6)
     period = f"{k.index.min().strftime('%b %Y')} - {k.index.max().strftime('%b %Y')}"
     sty.save_fig(fig, filename, caption=_caption(
         "results/tables/vol_target_comparison.csv", period,
