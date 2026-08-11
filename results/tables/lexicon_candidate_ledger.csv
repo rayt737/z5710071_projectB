@@ -1,0 +1,97 @@
+word,source,reason,rank,n_headlines,mean_plain_vader,lm_categories,in_vader_default,disposition,extension_status
+will,screen_pool,,1,3280,0.093,Strong_Modal,no,excluded_modal_hedging,
+could,screen_pool,,2,3145,0.164,"Uncertainty,Weak_Modal",no,excluded_modal_hedging,
+may,screen_pool,,3,1587,0.113,"Uncertainty,Weak_Modal",no,excluded_modal_hedging,
+despite,screen_pool,,4,756,0.126,Positive,no,excluded_judgement_context,
+rebound,screen_pool,,5,679,0.18,Positive,no,rated_kept,kept
+unusual,screen_pool,,6,621,0.094,Uncertainty,no,excluded_judgement_context,
+miss,screen_pool,,7,609,-0.063,Negative,yes,rated_kept,kept
+cut,screen_pool,,8,566,-0.196,Negative,yes,already_in_vader_default,
+concerns,screen_pool,,9,468,-0.004,Negative,no,rated_kept,kept
+against,screen_pool,,10,436,-0.003,Negative,no,excluded_judgement_context,
+outperform,screen_pool,,11,434,0.089,Positive,no,rated_kept,kept
+loss,screen_pool,,12,390,-0.205,Negative,yes,already_in_vader_default,
+decline,screen_pool,,13,355,0.031,Negative,no,rated_kept,kept
+might,screen_pool,,14,340,0.136,"Uncertainty,Weak_Modal",no,excluded_modal_hedging,
+risk,screen_pool,,15,334,-0.215,Uncertainty,yes,already_in_vader_default,
+claims,screen_pool,,16,321,-0.005,"Litigious,Negative",no,rated_flagged,flagged
+volatility,screen_pool,,17,304,0.061,"Negative,Uncertainty",no,rated_kept,kept
+boom,screen_pool,,18,284,0.156,Positive,no,excluded_judgement_context,
+late,screen_pool,,19,280,0.075,Negative,no,excluded_judgement_context,
+downgrades,screen_pool,,20,278,0.067,Negative,no,rated_kept,kept
+court,screen_pool,,21,275,0.076,Litigious,no,excluded_litigious_process,
+misses,screen_pool,,22,272,-0.107,Negative,yes,rated_kept,kept
+nearly,screen_pool,,23,243,0.106,"Uncertainty,Weak_Modal",no,excluded_modal_hedging,
+surpass,screen_pool,,24,217,0.013,Positive,no,rated_kept,kept
+dropped,screen_pool,,25,214,0.043,Negative,no,excluded_judgement_context,
+contract,screen_pool,,26,184,0.142,Litigious,no,excluded_litigious_process,
+ignore,screen_pool,,27,172,-0.025,Negative,yes,already_in_vader_default,
+volatile,screen_pool,,28,166,0.125,"Negative,Uncertainty",no,rated_kept,kept
+shortage,screen_pool,,29,166,-0.136,Negative,yes,already_in_vader_default,
+never,screen_pool,,30,165,0.074,Strong_Modal,no,excluded_modal_hedging,
+sharply,screen_pool,,31,161,-0.055,Negative,no,excluded_judgement_context,
+lawsuit,screen_pool,,32,156,-0.213,Litigious,yes,already_in_vader_default,
+slowdown,screen_pool,,33,155,-0.08,Negative,no,rated_kept,kept
+regulator,screen_pool,,34,148,0.027,Litigious,no,excluded_litigious_process,
+warns,screen_pool,,35,147,-0.183,Negative,yes,already_in_vader_default,
+defensive,screen_pool,,36,144,0.21,Negative,yes,rated_flagged,flagged
+leading,screen_pool,,37,142,0.17,Positive,no,excluded_judgement_context,
+antitrust,screen_pool,,38,137,0.029,"Litigious,Negative",no,excluded_litigious_process,
+correction,screen_pool,,39,135,0.069,Negative,no,excluded_judgement_context,
+delays,screen_pool,,40,131,-0.049,Negative,no,rated_kept,kept
+declines,screen_pool,,41,129,0.102,Negative,no,rated_kept,kept
+slow,screen_pool,,42,128,0.089,Negative,no,excluded_judgement_context,
+slowing,screen_pool,,43,128,0.164,Negative,no,excluded_judgement_context,
+challenge,screen_pool,,44,120,0.113,Negative,yes,already_in_vader_default,
+possible,screen_pool,,45,115,-0.015,"Uncertainty,Weak_Modal",no,excluded_modal_hedging,
+lost,screen_pool,,46,114,-0.224,Negative,yes,already_in_vader_default,
+must,screen_pool,,47,114,0.053,Strong_Modal,no,excluded_modal_hedging,
+almost,screen_pool,,48,111,0.071,"Uncertainty,Weak_Modal",no,excluded_modal_hedging,
+exposure,screen_pool,,49,111,0.108,Uncertainty,no,excluded_judgement_context,
+breaks,screen_pool,,50,106,0.034,Negative,no,excluded_judgement_context,
+predictions,screen_pool,,51,105,0.112,Uncertainty,no,excluded_judgement_context,
+loses,screen_pool,,52,102,-0.241,Negative,yes,already_in_vader_default,
+lose,screen_pool,,53,99,-0.248,Negative,yes,already_in_vader_default,
+settlement,screen_pool,,54,97,-0.026,Litigious,no,excluded_litigious_process,
+challenges,screen_pool,,55,95,0.195,Negative,yes,already_in_vader_default,
+dispute,screen_pool,,56,94,-0.225,Negative,yes,already_in_vader_default,
+downturn,screen_pool,,57,91,0.13,Negative,no,rated_kept,kept
+cautious,screen_pool,,58,91,0.013,Uncertainty,yes,rated_kept,kept
+closing,screen_pool,,59,91,0.151,Negative,no,excluded_judgement_context,
+disruption,screen_pool,,60,89,-0.225,Negative,yes,rated_kept,kept
+advances,screen_pool,,61,89,0.095,Positive,no,rated_kept,kept
+negatively,screen_pool,,62,88,-0.202,Negative,no,excluded_judgement_context,
+sues,screen_pool,,63,87,-0.163,"Litigious,Negative",no,excluded_litigious_process,
+regulators,screen_pool,,64,87,0.015,Litigious,no,excluded_litigious_process,
+turmoil,screen_pool,,65,86,-0.203,Negative,yes,already_in_vader_default,
+contracts,screen_pool,,66,86,0.151,Litigious,no,excluded_litigious_process,
+regulatory,screen_pool,,67,86,0.079,Litigious,no,excluded_litigious_process,
+surpasses,screen_pool,,68,84,0.043,Positive,no,excluded_judgement_context,
+suspends,screen_pool,,69,83,0.048,Negative,no,excluded_judgement_context,
+missed,screen_pool,,70,83,-0.061,Negative,yes,rated_kept,kept
+law,screen_pool,,71,82,0.055,Litigious,no,excluded_litigious_process,
+restrictions,screen_pool,,72,82,0.181,Constraining,no,excluded_judgement_context,
+questions,screen_pool,,73,82,-0.072,Negative,no,excluded_judgement_context,
+outperforming,screen_pool,,74,79,0.057,Positive,no,rated_kept,kept
+variant,screen_pool,,75,79,-0.153,Uncertainty,no,excluded_judgement_context,
+prediction,screen_pool,,76,78,0.248,Uncertainty,no,excluded_judgement_context,
+caution,screen_pool,,77,76,0.069,Negative,no,excluded_judgement_context,
+highest,screen_pool,,78,76,0.057,"Positive,Strong_Modal",no,excluded_modal_hedging,
+novo,screen_pool,,79,74,0.123,Litigious,no,excluded_litigious_process,
+hidden,screen_pool,,80,74,0.112,Uncertainty,no,excluded_judgement_context,
+rebounded,manual_coverage,below_min_freq (9 < 40),0,9,0.147,Positive,no,rated_kept,kept
+rebounding,manual_coverage,below_top_n_cutoff (qualifies but ranked past the top-80 display bound),96,58,0.143,Positive,no,rated_kept,kept
+outperformed,manual_coverage,below_min_freq (21 < 40),0,21,0.137,Positive,no,rated_kept,kept
+surpassed,manual_coverage,below_min_freq (5 < 40),0,5,0.442,Positive,no,rated_kept,kept
+upgrade,manual_coverage,no_lm_flags (never a candidate under the rules; added by inspection),0,243,0.036,,no,rated_kept,kept
+upgraded,manual_coverage,no_lm_flags (never a candidate under the rules; added by inspection),0,56,0.176,,no,rated_kept,kept
+upgrades,manual_coverage,no_lm_flags (never a candidate under the rules; added by inspection),0,359,0.102,,no,rated_kept,kept
+tailwinds,manual_coverage,no_lm_flags (never a candidate under the rules; added by inspection),0,29,0.207,,no,rated_kept,kept
+downgrade,manual_coverage,below_min_freq (30 < 40),0,30,0.02,Negative,no,rated_kept,kept
+downgraded,manual_coverage,below_top_n_cutoff (qualifies but ranked past the top-80 display bound),111,47,0.043,Negative,no,rated_kept,kept
+declined,manual_coverage,below_min_freq (11 < 40),0,11,0.091,Negative,no,rated_kept,kept
+layoffs,manual_coverage,below_top_n_cutoff (qualifies but ranked past the top-80 display bound),83,72,-0.033,Negative,no,rated_kept,kept
+overvalued,manual_coverage,below_top_n_cutoff (qualifies but ranked past the top-80 display bound),104,51,0.039,Negative,no,rated_kept,kept
+bankruptcy,manual_coverage,below_top_n_cutoff (qualifies but ranked past the top-80 display bound),109,49,-0.055,Negative,no,rated_kept,kept
+uncertain,manual_coverage,below_top_n_cutoff (qualifies but ranked past the top-80 display bound),85,66,-0.093,"Uncertainty,Weak_Modal",yes,rated_kept,kept
+risky,manual_coverage,below_top_n_cutoff (qualifies but ranked past the top-80 display bound),82,72,-0.067,"Negative,Uncertainty",yes,rated_kept,kept

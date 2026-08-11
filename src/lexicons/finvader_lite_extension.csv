@@ -1,0 +1,38 @@
+word,lm_category,valence_pass1,valence_pass2,agreed_valence,vader_lexicon_score,status,note
+rebound,Positive,0.4,0.45,0.42,1.7,kept,VADER scores it near-neutral; shares rebound is a clear positive
+rebounded,Positive,0.4,0.45,0.42,1.7,kept,Same family as rebound
+rebounding,Positive,0.4,0.4,0.4,1.6,kept,Same family as rebound
+outperform,Positive,0.55,0.6,0.58,2.3,kept,Analyst rating verb; VADER leaves it neutral
+outperformed,Positive,0.55,0.5,0.52,2.1,kept,Same family as outperform
+outperforming,Positive,0.55,0.5,0.52,2.1,kept,Same family as outperform
+surpass,Positive,0.5,0.55,0.52,2.1,kept,Earnings surpass estimates - beat-style positive
+surpassed,Positive,0.5,0.55,0.52,2.1,kept,Same family as surpass
+upgrade,Positive,0.5,0.55,0.52,2.1,kept,Analyst upgrade is a positive signal VADER misses
+upgraded,Positive,0.5,0.55,0.52,2.1,kept,Same family as upgrade
+upgrades,Positive,0.5,0.5,0.5,2.0,kept,Same family as upgrade
+advances,Positive,0.3,0.3,0.3,1.2,kept,Stock advances; mild positive kept modest to avoid over-weighting
+tailwinds,Positive,0.45,0.45,0.45,1.8,kept,Tailwinds = supportive factors; VADER neutral
+miss,Negative,-0.45,-0.5,-0.48,-1.9,kept,Sales miss / earnings miss is a strong negative; VADER default -0.6 is diluted in context
+misses,Negative,-0.45,-0.5,-0.48,-1.9,kept,Same family as miss
+missed,Negative,-0.45,-0.5,-0.48,-1.9,kept,Same family as miss
+downgrade,Negative,-0.5,-0.55,-0.52,-2.1,kept,Analyst downgrade is negative; VADER neutral
+downgraded,Negative,-0.5,-0.55,-0.52,-2.1,kept,Same family as downgrade
+downgrades,Negative,-0.5,-0.5,-0.5,-2.0,kept,Same family as downgrade
+decline,Negative,-0.45,-0.45,-0.45,-1.8,kept,Revenues decline is negative; VADER even scores it slightly positive
+declines,Negative,-0.45,-0.45,-0.45,-1.8,kept,Same family as decline
+declined,Negative,-0.45,-0.45,-0.45,-1.8,kept,Same family as decline
+concerns,Negative,-0.4,-0.45,-0.42,-1.7,kept,Recession concerns carries a negative tone VADER misses entirely
+layoffs,Negative,-0.55,-0.55,-0.55,-2.2,kept,Layoffs are a clear negative event
+delays,Negative,-0.4,-0.45,-0.42,-1.7,kept,Product/approval delays are negative
+slowdown,Negative,-0.5,-0.5,-0.5,-2.0,kept,Demand slowdown is negative
+overvalued,Negative,-0.45,-0.45,-0.45,-1.8,kept,VADER even scores overvalued slightly positive
+bankruptcy,Negative,-0.75,-0.7,-0.72,-2.9,kept,Extreme negative; VADER near-neutral
+disruption,Negative,-0.4,-0.45,-0.42,-1.7,kept,Supply/earnings disruption is negative; strengthens VADER weak default
+downturn,Negative,-0.55,-0.55,-0.55,-2.2,kept,Economic downturn is negative; VADER scores it positive
+volatility,Uncertainty,-0.25,-0.3,-0.28,-1.1,kept,Volatility is priced as risk; mild negative (LM flags Uncertainty)
+volatile,Uncertainty,-0.3,-0.3,-0.3,-1.2,kept,Same as volatility; volatile markets carries a risk tone
+cautious,Uncertainty,-0.25,-0.3,-0.28,-1.1,kept,Cautious outlook = risk-off; strengthens VADER weak default
+uncertain,Uncertainty,-0.3,-0.3,-0.3,-1.2,kept,Uncertainty is negatively priced; strengthens VADER weak default
+risky,Uncertainty,-0.35,-0.35,-0.35,-1.4,kept,Risky is a risk flag; strengthens VADER weak default
+defensive,Negative,-0.2,0.1,0.0,0.0,flagged,"Sign disagreement: negative in LM earnings lexicon but defensive stocks reads positive in market context - dropped, not averaged"
+claims,Negative,-0.2,0.0,-0.1,0.0,flagged,Pass 2 neutral in context (company claims vs insurance claims); sign-strength disagreement - dropped

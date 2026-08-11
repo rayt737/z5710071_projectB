@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Raw hosted data is never committed - it loads from the hosted ZIP via src/data_access.py
+data/
+
+# Block raw data files anywhere EXCEPT your committed outputs under results/.
+# The deployed app reads precomputed artifacts from results/data/, so results/ IS committed.
+*.parquet
+*.csv
+!results/**
+# The lexicon extension (ours) and the LM grounding dictionary (public) live in
+# src/lexicons/ and ARE committed - the sentiment pipeline reads them at runtime.
+!src/lexicons/**
+
+# Secrets / local
+.streamlit/secrets.toml
+.env

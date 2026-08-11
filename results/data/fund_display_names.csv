@@ -1,0 +1,30 @@
+fund_id,display_name
+equity_equal_weight,Invesper US Equity Index Fund
+equity_min_variance,Invesper US Equity Minimum Volatility Fund
+equity_max_sharpe,Invesper US Equity Opportunities Fund
+equity_risk_parity,Invesper US Equity Balanced Risk Fund
+crypto_equal_weight,Invesper Digital Assets Index Fund
+crypto_min_variance,Invesper Digital Assets Minimum Volatility Fund
+crypto_max_sharpe,Invesper Digital Assets Opportunities Fund
+crypto_risk_parity,Invesper Digital Assets Balanced Risk Fund
+combined_equal_weight,Invesper Multi-Asset Index Fund
+combined_min_variance,Invesper Multi-Asset Minimum Volatility Fund
+combined_max_sharpe,Invesper Multi-Asset Opportunities Fund
+combined_risk_parity,Invesper Multi-Asset Balanced Risk Fund
+defensive_equal_weight,Invesper Defensive Sectors Index Fund
+defensive_risk_parity,Invesper Defensive Sectors Balanced Risk Fund
+cyclical_equal_weight,Invesper Cyclical Sectors Index Fund
+cyclical_risk_parity,Invesper Cyclical Sectors Balanced Risk Fund
+growth_sensitive_equal_weight,Invesper Growth & Innovation Sectors Index Fund
+growth_sensitive_risk_parity,Invesper Growth & Innovation Sectors Balanced Risk Fund
+payments_equal_weight,Invesper Digital Payments Index Fund
+payments_risk_parity,Invesper Digital Payments Balanced Risk Fund
+web3infra_equal_weight,Invesper Web3 Infrastructure Index Fund
+web3infra_risk_parity,Invesper Web3 Infrastructure Balanced Risk Fund
+equity_min_variance_base,Invesper US Equity Minimum Volatility Fund
+equity_min_variance_momentum,Invesper US Equity Minimum Volatility Fund (Momentum)
+equity_min_variance_contrarian,Invesper US Equity Minimum Volatility Fund (Contrarian)
+combined_max_sharpe_base,Invesper Multi-Asset Opportunities Fund
+combined_max_sharpe_vol_targeted,Invesper Multi-Asset Opportunities Fund (Managed Vol)
+crypto_max_sharpe_base,Invesper Digital Assets Opportunities Fund
+crypto_max_sharpe_vol_targeted,Invesper Digital Assets Opportunities Fund (Managed Vol)
