@@ -17,4 +17,4 @@ the mechanical ones.
 - [x] AGENTS.md or CLAUDE.md (your tool's file) is YOUR own, not the stub.
 - [x] ai/ contains your prompt logs and AI notes.
 - [x] The writing and interpretation are your own.
-- [ ] Submit: the zip to Moodle, the public repo link, and the live Streamlit URL.
+- [x] Submit: the zip to Moodle, the public repo link, and the live Streamlit URL.

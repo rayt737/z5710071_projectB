@@ -1382,3 +1382,9 @@ Nothing committed or pushed; repo still at `6ade3de`.
   (prompt_10)" - README.md, AGENTS.md, CLAUDE.md, SUBMISSION_CHECKLIST.md,
   ai/prompts/prompt_10.md (this log entry was committed on top of it).
 - Pushed to `origin master`; remote verified via `git ls-remote` + GitHub API.
+
+### Addendum (after the student's hand-in)
+- The student completed the actual Moodle submission (zip to Moodle, the
+  public repo link, and the live Streamlit URL) on their own account.
+  SUBMISSION_CHECKLIST.md item 11 ("Submit") was then ticked. Final state:
+  all 11 checklist items are ticked.
